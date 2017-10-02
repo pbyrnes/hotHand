@@ -1,0 +1,634 @@
+
+% Default to the notebook output style
+
+    
+
+
+% Inherit from the specified cell style.
+
+
+
+
+    
+\documentclass{article}
+
+    
+    
+    \usepackage{graphicx} % Used to insert images
+    \usepackage{adjustbox} % Used to constrain images to a maximum size 
+    \usepackage{color} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range 
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    
+
+    
+    
+    \definecolor{orange}{cmyk}{0,0.4,0.8,0.2}
+    \definecolor{darkorange}{rgb}{.71,0.21,0.01}
+    \definecolor{darkgreen}{rgb}{.12,.54,.11}
+    \definecolor{myteal}{rgb}{.26, .44, .56}
+    \definecolor{gray}{gray}{0.45}
+    \definecolor{lightgray}{gray}{.95}
+    \definecolor{mediumgray}{gray}{.8}
+    \definecolor{inputbackground}{rgb}{.95, .95, .85}
+    \definecolor{outputbackground}{rgb}{.95, .95, .95}
+    \definecolor{traceback}{rgb}{1, .95, .95}
+    % ansi colors
+    \definecolor{red}{rgb}{.6,0,0}
+    \definecolor{green}{rgb}{0,.65,0}
+    \definecolor{brown}{rgb}{0.6,0.6,0}
+    \definecolor{blue}{rgb}{0,.145,.698}
+    \definecolor{purple}{rgb}{.698,.145,.698}
+    \definecolor{cyan}{rgb}{0,.698,.698}
+    \definecolor{lightgray}{gray}{0.5}
+    
+    % bright ansi colors
+    \definecolor{darkgray}{gray}{0.25}
+    \definecolor{lightred}{rgb}{1.0,0.39,0.28}
+    \definecolor{lightgreen}{rgb}{0.48,0.99,0.0}
+    \definecolor{lightblue}{rgb}{0.53,0.81,0.92}
+    \definecolor{lightpurple}{rgb}{0.87,0.63,0.87}
+    \definecolor{lightcyan}{rgb}{0.5,1.0,0.83}
+    
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatability definitions
+    \def\gt{>}
+    \def\lt{<}
+    % Document parameters
+    \title{hotHandEffect}
+    
+    
+    
+
+    % Pygments definitions
+    
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % Exact colors from NB
+    \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
+    \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
+
+
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=blue,
+      linkcolor=darkorange,
+      citecolor=darkgreen,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+    \begin{document}
+    
+    
+    \maketitle
+    
+    
+
+    
+
+    \section{Investigation of ``Hot-hand effect''}
+
+
+    There is a widely held belief in basketball that some players have
+periods of time where they are much better shooters than normal. This
+can be called having a ``hot hand''. An example would be if a player hit
+3 shots in a row, then many fans would expect that player to be more
+likely (than their usual percentage) to hit their next shot.
+
+Whether this is a real effect or some kind of cognitive bias has been
+previously studied. For instance in 1984(83?, 85? FIX THIS),
+{[}RESEARCHERS{]} looked at actual shooting results of the Philadelphia
+76ers, free throws of the Boston Celtics, and controlled-experiment
+shots of college students. Their data did not support the existence of a
+hot-hand effect. This question has been revisited, for instance in
+{[}PAPERS FROM 2005?? or so??{]} which also failed to find evidence to
+support the existence of the hot-hand effect. Interestingly, in 2015
+{[}RESEARCHERS{]} noted that the sampling method used in previous
+studies was flawed. The flaw is subtle, but leads to some evidence for
+the hot-hand effect.
+
+My intent is to investigate recent shooting results of NBA players with
+the goals of:
+
+Looking for evidence to support (or reject) the existence of the
+hot-hand effect.
+
+Understand the subtleties of the sampling flaw found by
+{[}RESEARCHERS{]}.
+
+
+    \subsection{Getting the data}
+
+
+    The reason I chose to study NBA data was that I found a resource that
+makes shooting data easy to download for the NBA: www.nbasavant.com. I
+have downloaded all shooting data for 2016-2017 and placed it in the
+files nba\_savant\_\_.csv in the data/nba\_savant folder. {[}Note: you
+can ostensibly download a .csv file of the shots data for the entire
+year, but the files seem to be limited to 50,000 lines which is not
+enough. That's why I split the data by month when downloading.{]}
+
+There is some concern about the complete validity of the data. My
+biggest concern is the data for April 2017 seems to be incomplete. There
+are not near enough total shots for the month and spot checking some
+players shows many fewer shots than expected for that player. However,
+working with this data will at least provide a framework for studying
+similar datasets.
+
+Before reading in the data, we will load pandas, a python library used
+for data analysis.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}1}]:} \PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k+kn}{as} \PY{n+nn}{pd}
+\end{Verbatim}
+
+    Now, we can read in the data from the downloaded .csv files and store
+the data as a DataFrame (a pandas data structure).
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}2}]:} \PY{k+kn}{import} \PY{n+nn}{glob}
+        \PY{n}{files\PYZus{}to\PYZus{}read} \PY{o}{=} \PY{n}{glob}\PY{o}{.}\PY{n}{glob}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{../data/nba\PYZus{}savant/*.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        
+        \PY{n}{shots} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{concat}\PY{p}{(}\PY{p}{(}\PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{n}{f}\PY{p}{)} \PY{k}{for} \PY{n}{f} \PY{o+ow}{in} \PY{n}{files\PYZus{}to\PYZus{}read}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+    We can look at the first few rows of data to get a sense of what data we
+have (and if the read did what we expected it to do):
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}3}]:} \PY{n}{shots}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+            \begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}3}]:}              name           team\_name   game\_date  season  espn\_player\_id  \textbackslash{}
+        0  Andre Drummond     Detroit Pistons  2017-01-01    2016          6585.0   
+        1    Nerlens Noel  Philadelphia 76ers  2017-01-30    2016       2991280.0   
+        2       Jon Leuer     Detroit Pistons  2017-01-01    2016          6452.0   
+        3   Dwight Howard       Atlanta Hawks  2017-01-29    2016          2384.0   
+        4  Andre Drummond     Detroit Pistons  2017-01-01    2016          6585.0   
+        
+              team\_id  espn\_game\_id  period  minutes\_remaining  seconds\_remaining  \textbackslash{}
+        0  1610612765     400899381       4                  5                 57   
+        1  1610612755             0       3                  7                 18   
+        2  1610612765     400899381       1                  3                 29   
+        3  1610612737     400900132       4                  0                 45   
+        4  1610612765     400899381       1                  7                 57   
+        
+              \ldots           shot\_type shot\_distance          opponent  x  y  dribbles  \textbackslash{}
+        0     \ldots      2PT Field Goal             0        Miami Heat  0  1         0   
+        1     \ldots      2PT Field Goal             0  Sacramento Kings  0  1         0   
+        2     \ldots      2PT Field Goal             0        Miami Heat  0  1         0   
+        3     \ldots      2PT Field Goal             0   New York Knicks  0  1         0   
+        4     \ldots      2PT Field Goal             0        Miami Heat  0  1         0   
+        
+           touch\_time  defender\_name  defender\_distance  shot\_clock  
+        0         0.0            NaN                0.0         0.0  
+        1         0.0            NaN                0.0         0.0  
+        2         0.0            NaN                0.0         0.0  
+        3         0.0            NaN                0.0         0.0  
+        4         0.0            NaN                0.0         0.0  
+        
+        [5 rows x 22 columns]
+\end{Verbatim}
+        
+    Each row of the DataFrame consists of one shot (the observation) and 22
+variables. Those variables are the columns. Note that the \ldots{}
+indicates we are not seeing all of the columns. Pandas has a setting
+that gives the maximum number of columns to print. It appears that value
+defaults to 20. We can increase this value and then look at the first
+few rows again (using new max of 60, but 22 would suffice).
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}4}]:} \PY{n}{pd}\PY{o}{.}\PY{n}{set\PYZus{}option}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{display.max\PYZus{}columns}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+m+mi}{60}\PY{p}{)}
+        \PY{n}{shots}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+            \begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}4}]:}              name           team\_name   game\_date  season  espn\_player\_id  \textbackslash{}
+        0  Andre Drummond     Detroit Pistons  2017-01-01    2016          6585.0   
+        1    Nerlens Noel  Philadelphia 76ers  2017-01-30    2016       2991280.0   
+        2       Jon Leuer     Detroit Pistons  2017-01-01    2016          6452.0   
+        3   Dwight Howard       Atlanta Hawks  2017-01-29    2016          2384.0   
+        4  Andre Drummond     Detroit Pistons  2017-01-01    2016          6585.0   
+        
+              team\_id  espn\_game\_id  period  minutes\_remaining  seconds\_remaining  \textbackslash{}
+        0  1610612765     400899381       4                  5                 57   
+        1  1610612755             0       3                  7                 18   
+        2  1610612765     400899381       1                  3                 29   
+        3  1610612737     400900132       4                  0                 45   
+        4  1610612765     400899381       1                  7                 57   
+        
+           shot\_made\_flag          action\_type       shot\_type  shot\_distance  \textbackslash{}
+        0               1  Alley Oop Dunk Shot  2PT Field Goal              0   
+        1               1  Alley Oop Dunk Shot  2PT Field Goal              0   
+        2               0  Alley Oop Dunk Shot  2PT Field Goal              0   
+        3               1  Alley Oop Dunk Shot  2PT Field Goal              0   
+        4               1  Alley Oop Dunk Shot  2PT Field Goal              0   
+        
+                   opponent  x  y  dribbles  touch\_time  defender\_name  \textbackslash{}
+        0        Miami Heat  0  1         0         0.0            NaN   
+        1  Sacramento Kings  0  1         0         0.0            NaN   
+        2        Miami Heat  0  1         0         0.0            NaN   
+        3   New York Knicks  0  1         0         0.0            NaN   
+        4        Miami Heat  0  1         0         0.0            NaN   
+        
+           defender\_distance  shot\_clock  
+        0                0.0         0.0  
+        1                0.0         0.0  
+        2                0.0         0.0  
+        3                0.0         0.0  
+        4                0.0         0.0  
+\end{Verbatim}
+        
+
+    \subsection{Strategy}
+
+
+    For an initial investigation, I plan on making the following
+assumptions:
+
+Each player's shots are to be investigated as one sequence throughout
+the entire year. A different, and perhaps more useful, choice would be
+to split up each players shots by game. We will look at the data split
+by game later.
+
+To consider the existence of the hot-hand effect we will only look at
+whether the previous shot was a make or miss. The literature standard
+seems to be looking at shooting percentages after streaks of 1, 2, or 3
+consecutive makes or misses. We will handle more complicated scenarios
+later.
+
+The only variables we will consider for analyzing each shot are those
+that determine:
+
+Which player took the shot (name, espn\_player\_id)
+
+When the shot was taken (game\_date, period, minutes\_remaining,
+seconds\_remaining) {[}Note: these are used to determine the order the
+shots occurred in.{]}
+
+Whether the shot was a make or miss (shot\_made\_flag)
+
+We will not, at least initially, be considering other variables such as
+those associated to shot difficulty, opponents, or effects of other
+players shooting on a given night.
+
+
+    \subsection{Rearranging the data}
+
+
+    Let's start by removing columns we are not interested in. Actually, we
+are only keeping the columns we are interested in.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}5}]:} \PY{n}{shots} \PY{o}{=} \PY{n}{shots}\PY{p}{[}\PY{p}{:}\PY{p}{]}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{name}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{game\PYZus{}date}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{espn\PYZus{}player\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{period}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{minutes\PYZus{}remaining}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{seconds\PYZus{}remaining}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{shot\PYZus{}made\PYZus{}flag}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}
+        \PY{n}{shots}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+            \begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}5}]:}              name   game\_date  espn\_player\_id  period  minutes\_remaining  \textbackslash{}
+        0  Andre Drummond  2017-01-01          6585.0       4                  5   
+        1    Nerlens Noel  2017-01-30       2991280.0       3                  7   
+        2       Jon Leuer  2017-01-01          6452.0       1                  3   
+        3   Dwight Howard  2017-01-29          2384.0       4                  0   
+        4  Andre Drummond  2017-01-01          6585.0       1                  7   
+        
+           seconds\_remaining  shot\_made\_flag  
+        0                 57               1  
+        1                 18               1  
+        2                 29               0  
+        3                 45               1  
+        4                 57               1  
+\end{Verbatim}
+        
+    Now we can sort the dataframe by date. That will help us to easily find
+the previous shot for each player.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}6}]:} \PY{n}{shots} \PY{o}{=} \PY{n}{shots}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{game\PYZus{}date}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{period}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{minutes\PYZus{}remaining}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{seconds\PYZus{}remaining}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}\PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{,}\PY{n}{ascending}\PY{o}{=}\PY{p}{[}\PY{n+nb+bp}{True}\PY{p}{,}\PY{n+nb+bp}{True}\PY{p}{,}\PY{n+nb+bp}{False}\PY{p}{,}\PY{n+nb+bp}{False}\PY{p}{]}\PY{p}{)}
+        \PY{n}{shots}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+            \begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}6}]:}                    name   game\_date  espn\_player\_id  period  \textbackslash{}
+        6243        Rodney Hood  2016-10-25       2581177.0       1   
+        675        Derrick Rose  2016-10-25          3456.0       1   
+        3037  LaMarcus Aldridge  2016-10-25          2983.0       1   
+        2133     AlFarouq Aminu  2016-10-25          4248.0       1   
+        1792         Kevin Love  2016-10-25          3449.0       1   
+        
+              minutes\_remaining  seconds\_remaining  shot\_made\_flag  
+        6243                 11                 44               1  
+        675                  11                 40               1  
+        3037                 11                 36               0  
+        2133                 11                 27               1  
+        1792                 11                 26               0  
+\end{Verbatim}
+        
+    Now for the more interesting processing step. This will involve:
+
+Group the shots by player.
+
+Add a `previous\_shot\_made\_flag' for every shot that indicates if the
+player made the previous shot.
+
+Group and aggregate each player's data by `previous\_shot\_made\_flag'
+to calculate the mean shooting percentage for both when the player
+made/missed the previous shot.
+
+Collect the individual player percentages on made/missed shot back into
+a dataframe.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}7}]:} \PY{n}{shots\PYZus{}grouped\PYZus{}by\PYZus{}player} \PY{o}{=} \PY{n}{shots}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{espn\PYZus{}player\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{} to collect the perecentages afer make/miss for each player}
+        \PY{n}{player\PYZus{}shot\PYZus{}dict} \PY{o}{=} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}
+        
+        \PY{k}{for} \PY{n+nb}{id}\PY{p}{,}\PY{n}{group} \PY{o+ow}{in} \PY{n}{shots\PYZus{}grouped\PYZus{}by\PYZus{}player}\PY{p}{:}
+            \PY{n}{player\PYZus{}stats} \PY{o}{=} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}
+            \PY{n}{group}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{previous\PYZus{}shot\PYZus{}made\PYZus{}flag}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{group}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{shot\PYZus{}made\PYZus{}flag}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{shift}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{)}
+            \PY{n}{player\PYZus{}stats}\PY{p}{[}\PY{n}{group}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{espn\PYZus{}player\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]} \PY{o}{=} \PY{n}{group}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{shot\PYZus{}made\PYZus{}flag}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{previous\PYZus{}shot\PYZus{}made\PYZus{}flag}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{previous\PYZus{}shot\PYZus{}made\PYZus{}flag}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{aggregate}\PY{p}{(}\PY{p}{[}\PY{n}{numpy}\PY{o}{.}\PY{n}{mean}\PY{p}{,}\PY{n}{numpy}\PY{o}{.}\PY{n}{sum}\PY{p}{,}\PY{n}{numpy}\PY{o}{.}\PY{n}{count\PYZus{}nonzero}\PY{p}{]}\PY{p}{)}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{shot\PYZus{}made\PYZus{}flag}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+            
+            \PY{c+c1}{\PYZsh{} filter out players who did not attempt at least one shot after both a make and a miss}
+            \PY{k}{if} \PY{o+ow}{not} \PY{n}{player\PYZus{}stats}\PY{p}{[}\PY{n+nb}{id}\PY{p}{]}\PY{o}{.}\PY{n}{empty} \PY{o+ow}{and} \PY{n}{player\PYZus{}stats}\PY{p}{[}\PY{n+nb}{id}\PY{p}{]}\PY{o}{.}\PY{n}{index}\PY{o}{.}\PY{n}{size} \PY{o}{==} \PY{l+m+mi}{2}\PY{p}{:}
+                    \PY{n}{player\PYZus{}shot\PYZus{}dict}\PY{p}{[}\PY{n+nb}{id}\PY{p}{]} \PY{o}{=} \PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{percent\PYZus{}after\PYZus{}miss}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}\PY{n}{player\PYZus{}stats}\PY{p}{[}\PY{n+nb}{id}\PY{p}{]}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{percent\PYZus{}after\PYZus{}make}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}\PY{n}{player\PYZus{}stats}\PY{p}{[}\PY{n+nb}{id}\PY{p}{]}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{\PYZcb{}}
+        \PY{n}{player\PYZus{}shot\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{o}{.}\PY{n}{from\PYZus{}dict}\PY{p}{(}\PY{n}{data}\PY{o}{=}\PY{n}{player\PYZus{}shot\PYZus{}dict}\PY{p}{,}\PY{n}{orient}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{index}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{n}{player\PYZus{}shot\PYZus{}df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+-c:8: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row\_indexer,col\_indexer] = value instead
+
+See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html\#indexing-view-versus-copy
+    \end{Verbatim}
+
+            \begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}7}]:}        percent\_after\_miss  percent\_after\_make
+        25.0             0.285714            0.000000
+        136.0            0.380435            0.412429
+        165.0            0.430435            0.386997
+        272.0            0.385593            0.386667
+        558.0            0.285714            0.500000
+\end{Verbatim}
+        
+    We now have the shooting percentage for every player both after a miss
+and after a make. If shooters do not get ``hot'', then it seems
+reasonable that for each player that percent\_after\_miss and
+percent\_after\_make should be roughly equal. If shooters do get
+``hot'', then it seems reasonable that for each player that
+percent\_after\_miss should typically be less than percent\_after\_make.
+
+
+    \subsection{Analyzing the data}
+
+
+    To start investigating these questions we can first plot the data in a
+scatter plot. Points will be plotted with red points for a player that
+has a higher percentage after a make and blue points for a player that
+has a higher percentage after a miss.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}8}]:} \PY{n}{colors} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{player\PYZus{}shot\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{percent\PYZus{}after\PYZus{}miss}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{\PYZgt{}}\PY{n}{player\PYZus{}shot\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{percent\PYZus{}after\PYZus{}make}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{b}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{n}{player\PYZus{}shot\PYZus{}df}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{percent\PYZus{}after\PYZus{}miss}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{percent\PYZus{}after\PYZus{}make}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{kind}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scatter}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{n}{colors}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{12}\PY{p}{,}\PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+            \begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}8}]:} <matplotlib.axes.\_subplots.AxesSubplot at 0x7fb4b805c8d0>
+\end{Verbatim}
+        
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{hotHandEffect_files/hotHandEffect_23_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    The previous scatter plot does not seem to allow us to defnitively
+conclude much of anything. Players seem roughly split between those that
+shoot better after a miss and those that shoot better after a make.
+
+We can run statistical tests to evaluate the results objectively.
+
+The first test we will try is a t-test. Our null hypothesis will be that
+shooting percentage after a make and shooting percentage after a miss
+are the same. The alternative hypothesis will be that shooting
+percentage after a make is greater than shooting percentage after a
+miss. Let's assume an alpha value of 0.05 which means that we need a
+p-value less than 0.05 to reject the null hypothesis and conclude the
+data support that players have a better shooting percentage after a
+make. Note that this results in a one-tailed test. Annoyingly, python's
+standard libraries seem to only compute p-values for a two-tailed test.
+That means we need to divide the python calculated p-value by 2 and then
+possibly subtracting from 1 (depending on whether the t-statistic is
+positive or negative) to get our true p-value.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}9}]:} \PY{k+kn}{import} \PY{n+nn}{scipy.stats}
+        
+        \PY{p}{(}\PY{n}{t}\PY{p}{,} \PY{n}{p}\PY{p}{)} \PY{o}{=} \PY{n}{scipy}\PY{o}{.}\PY{n}{stats}\PY{o}{.}\PY{n}{ttest\PYZus{}1samp}\PY{p}{(}\PY{n}{player\PYZus{}shot\PYZus{}df}\PY{o}{.}\PY{n}{percent\PYZus{}after\PYZus{}make}\PY{o}{\PYZhy{}}\PY{n}{player\PYZus{}shot\PYZus{}df}\PY{o}{.}\PY{n}{percent\PYZus{}after\PYZus{}miss}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{)}
+        \PY{k}{if} \PY{n}{t} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0}\PY{p}{:}
+            \PY{c+c1}{\PYZsh{} t\PYZgt{}0 implies percent\PYZus{}after\PYZus{}make is generally greater than percent\PYZus{}after\PYZus{}miss}
+            \PY{c+c1}{\PYZsh{} so this is the tail that (at least somewhat) supports our alternative hypothesis}
+            \PY{n}{p} \PY{o}{=} \PY{n}{p}\PY{o}{/}\PY{l+m+mi}{2}
+        \PY{k}{else}\PY{p}{:}
+            \PY{c+c1}{\PYZsh{} t\PYZlt{}0 implies percent\PYZus{}after\PYZus{}make is generally less than percent\PYZus{}after\PYZus{}miss}
+            \PY{c+c1}{\PYZsh{} so this is the tail that definitely does not support our alternative hypothesis}
+            \PY{n}{p} \PY{o}{=} \PY{l+m+mi}{1} \PY{o}{\PYZhy{}} \PY{n}{p}\PY{o}{/}\PY{l+m+mi}{2}
+        \PY{n}{p}
+\end{Verbatim}
+
+            \begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}9}]:} 0.99951561688842272
+\end{Verbatim}
+        
+    So, our p-value is (much) larger than 0.05 which means the data do not
+support the hot hand hypothesis. In fact, the data would have supported
+the hypothesis that the average shooting percentage of players is higher
+after a miss than after a make.
+
+Where to go from here? There are a number of things we could tidy up.
+Some of these include the following.
+
+Each player's shots are viewed as one sequence for the entire year. We
+could split each player's shots on a per game basis.
+
+The t-test assumes that the distribution of differences between percent
+after make and miss is normally distributed. We could look into the
+validity of that assumption.
+
+There seem to be a fair number of outliers in the scatter plot. It seems
+likely that a lot of the outliers are players that took very few shots.
+One option to deal with the outliers would be to only consider players
+that took at least a certain number of shots. That seems tempting at
+first, but once we split each players shots into individual games we
+will need to consider relatively small numbers of shots anyway.
+Hopefully, we can use appropriate statistics to account for a player
+with a small number of shots. The essential problem we have is that we
+are using something roughly akin to an average-of-averages which is
+problematic with each inner average having a different sample size.
+
+We can extend our analysis to look at more than the previous shot. Maybe
+the previous n shots for some n=2 or n=3.
+
+We could account for the different shot types. Maybe do something like
+only looking at 3-point shots or jump shots.
+
+We could apply machine learning (or other) techniques to look for
+patterns in the players that do have a better shooting percentage after
+a make or a miss.
+
+We could investigate the grouping step of the data arranging. This step
+takes a fair amount of time. Perhaps there is a more efficient way to
+perform the same task.
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+    \end{document}
