@@ -445,77 +445,86 @@ are only keeping the columns we are interested in.
         4                 57               1  
 \end{Verbatim}
         
-    Now we can sort the dataframe by date. That will help us to easily find
-the previous shot for each player.
+    Now we can sort the dataframe by player and date/time. That will help us
+to easily find the previous shot for each player.
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}6}]:} \PY{n}{shots} \PY{o}{=} \PY{n}{shots}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{game\PYZus{}date}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{period}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{minutes\PYZus{}remaining}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{seconds\PYZus{}remaining}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}\PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{,}\PY{n}{ascending}\PY{o}{=}\PY{p}{[}\PY{n+nb+bp}{True}\PY{p}{,}\PY{n+nb+bp}{True}\PY{p}{,}\PY{n+nb+bp}{False}\PY{p}{,}\PY{n+nb+bp}{False}\PY{p}{]}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}6}]:} \PY{n}{shots} \PY{o}{=} \PY{n}{shots}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{espn\PYZus{}player\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{game\PYZus{}date}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{period}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{minutes\PYZus{}remaining}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{seconds\PYZus{}remaining}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}\PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{,}\PY{n}{ascending}\PY{o}{=}\PY{p}{[}\PY{n+nb+bp}{True}\PY{p}{,}\PY{n+nb+bp}{True}\PY{p}{,}\PY{n+nb+bp}{True}\PY{p}{,}\PY{n+nb+bp}{False}\PY{p}{,}\PY{n+nb+bp}{False}\PY{p}{]}\PY{p}{)}
         \PY{n}{shots}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
 \end{Verbatim}
 
             \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}6}]:}                    name   game\_date  espn\_player\_id  period  \textbackslash{}
-        6243        Rodney Hood  2016-10-25       2581177.0       1   
-        675        Derrick Rose  2016-10-25          3456.0       1   
-        3037  LaMarcus Aldridge  2016-10-25          2983.0       1   
-        2133     AlFarouq Aminu  2016-10-25          4248.0       1   
-        1792         Kevin Love  2016-10-25          3449.0       1   
+{\color{outcolor}Out[{\color{outcolor}6}]:}                     name   game\_date  espn\_player\_id  period  \textbackslash{}
+        4544   Metta World Peace  2016-10-30            25.0       1   
+        189    Metta World Peace  2016-10-30            25.0       1   
+        15320  Metta World Peace  2016-11-08            25.0       4   
+        28798  Metta World Peace  2016-11-08            25.0       4   
+        33601  Metta World Peace  2016-11-23            25.0       1   
         
-              minutes\_remaining  seconds\_remaining  shot\_made\_flag  
-        6243                 11                 44               1  
-        675                  11                 40               1  
-        3037                 11                 36               0  
-        2133                 11                 27               1  
-        1792                 11                 26               0  
+               minutes\_remaining  seconds\_remaining  shot\_made\_flag  
+        4544                   2                 38               0  
+        189                    1                  6               0  
+        15320                  6                 24               0  
+        28798                  5                 39               0  
+        33601                  7                 39               1  
 \end{Verbatim}
         
-    Now for the more interesting processing step. This will involve:
-
-Group the shots by player.
-
-Add a `previous\_shot\_made\_flag' for every shot that indicates if the
-player made the previous shot.
-
-Group and aggregate each player's data by `previous\_shot\_made\_flag'
-to calculate the mean shooting percentage for both when the player
-made/missed the previous shot.
-
-Collect the individual player percentages on made/missed shot back into
-a dataframe.
+    Now we add a boolean variable to indicate if the previous shot was a
+make or miss.
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}7}]:} \PY{n}{shots\PYZus{}grouped\PYZus{}by\PYZus{}player} \PY{o}{=} \PY{n}{shots}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{espn\PYZus{}player\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-        
-        \PY{c+c1}{\PYZsh{} to collect the perecentages afer make/miss for each player}
-        \PY{n}{player\PYZus{}shot\PYZus{}dict} \PY{o}{=} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}
-        
-        \PY{k}{for} \PY{n+nb}{id}\PY{p}{,}\PY{n}{group} \PY{o+ow}{in} \PY{n}{shots\PYZus{}grouped\PYZus{}by\PYZus{}player}\PY{p}{:}
-            \PY{n}{player\PYZus{}stats} \PY{o}{=} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}
-            \PY{n}{group}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{previous\PYZus{}shot\PYZus{}made\PYZus{}flag}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{group}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{shot\PYZus{}made\PYZus{}flag}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{shift}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{)}
-            \PY{n}{player\PYZus{}stats}\PY{p}{[}\PY{n}{group}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{espn\PYZus{}player\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]} \PY{o}{=} \PY{n}{group}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{shot\PYZus{}made\PYZus{}flag}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{previous\PYZus{}shot\PYZus{}made\PYZus{}flag}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{previous\PYZus{}shot\PYZus{}made\PYZus{}flag}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{aggregate}\PY{p}{(}\PY{p}{[}\PY{n}{numpy}\PY{o}{.}\PY{n}{mean}\PY{p}{,}\PY{n}{numpy}\PY{o}{.}\PY{n}{sum}\PY{p}{,}\PY{n}{numpy}\PY{o}{.}\PY{n}{count\PYZus{}nonzero}\PY{p}{]}\PY{p}{)}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{shot\PYZus{}made\PYZus{}flag}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
-            
-            \PY{c+c1}{\PYZsh{} filter out players who did not attempt at least one shot after both a make and a miss}
-            \PY{k}{if} \PY{o+ow}{not} \PY{n}{player\PYZus{}stats}\PY{p}{[}\PY{n+nb}{id}\PY{p}{]}\PY{o}{.}\PY{n}{empty} \PY{o+ow}{and} \PY{n}{player\PYZus{}stats}\PY{p}{[}\PY{n+nb}{id}\PY{p}{]}\PY{o}{.}\PY{n}{index}\PY{o}{.}\PY{n}{size} \PY{o}{==} \PY{l+m+mi}{2}\PY{p}{:}
-                    \PY{n}{player\PYZus{}shot\PYZus{}dict}\PY{p}{[}\PY{n+nb}{id}\PY{p}{]} \PY{o}{=} \PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{percent\PYZus{}after\PYZus{}miss}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}\PY{n}{player\PYZus{}stats}\PY{p}{[}\PY{n+nb}{id}\PY{p}{]}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{percent\PYZus{}after\PYZus{}make}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}\PY{n}{player\PYZus{}stats}\PY{p}{[}\PY{n+nb}{id}\PY{p}{]}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{\PYZcb{}}
-        \PY{n}{player\PYZus{}shot\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{o}{.}\PY{n}{from\PYZus{}dict}\PY{p}{(}\PY{n}{data}\PY{o}{=}\PY{n}{player\PYZus{}shot\PYZus{}dict}\PY{p}{,}\PY{n}{orient}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{index}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}7}]:} \PY{n}{shots}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{previous\PYZus{}shot\PYZus{}made\PYZus{}flag}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{p}{(}\PY{n}{shots}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{shot\PYZus{}made\PYZus{}flag}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{shift}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{)} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{shots}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{espn\PYZus{}player\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{n}{shots}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{espn\PYZus{}player\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{shift}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{)}
+        \PY{n}{shots\PYZus{}only\PYZus{}previous} \PY{o}{=} \PY{n}{shots}\PY{p}{[}\PY{n}{shots}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{espn\PYZus{}player\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{n}{shots}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{espn\PYZus{}player\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{shift}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{]}
+\end{Verbatim}
+
+    We can now calculate the shooting percentage for each player both after
+a make and after a miss.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}8}]:} \PY{n}{player\PYZus{}shot\PYZus{}df} \PY{o}{=} \PY{n}{shots\PYZus{}only\PYZus{}previous}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{previous\PYZus{}shot\PYZus{}made\PYZus{}flag}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{espn\PYZus{}player\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{shot\PYZus{}made\PYZus{}flag}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{espn\PYZus{}player\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{previous\PYZus{}shot\PYZus{}made\PYZus{}flag}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{aggregate}\PY{p}{(}\PY{p}{[}\PY{n}{numpy}\PY{o}{.}\PY{n}{mean}\PY{p}{,}\PY{n}{numpy}\PY{o}{.}\PY{n}{sum}\PY{p}{]}\PY{p}{)}
         \PY{n}{player\PYZus{}shot\PYZus{}df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
 \end{Verbatim}
 
-    \begin{Verbatim}[commandchars=\\\{\}]
--c:8: SettingWithCopyWarning: 
-A value is trying to be set on a copy of a slice from a DataFrame.
-Try using .loc[row\_indexer,col\_indexer] = value instead
+            \begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}8}]:}                                        shot\_made\_flag     
+                                                         mean  sum
+        espn\_player\_id previous\_shot\_made\_flag                    
+        25.0           0                             0.285714    6
+                       1                             0.000000    0
+        136.0          0                             0.380435  105
+                       1                             0.412429   73
+        165.0          0                             0.430435  198
+\end{Verbatim}
+        
+    Adding columns for easier access of percentage after miss and make.
 
-See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html\#indexing-view-versus-copy
-    \end{Verbatim}
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}9}]:} \PY{n}{player\PYZus{}shot\PYZus{}df\PYZus{}unstack} \PY{o}{=} \PY{n}{player\PYZus{}shot\PYZus{}df}\PY{o}{.}\PY{n}{unstack}\PY{p}{(}\PY{p}{)}
+        \PY{n}{player\PYZus{}shot\PYZus{}df\PYZus{}unstack}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{percent\PYZus{}after\PYZus{}miss}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{player\PYZus{}shot\PYZus{}df\PYZus{}unstack}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{p}{:}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{shot\PYZus{}made\PYZus{}flag}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+        \PY{n}{player\PYZus{}shot\PYZus{}df\PYZus{}unstack}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{percent\PYZus{}after\PYZus{}make}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{player\PYZus{}shot\PYZus{}df\PYZus{}unstack}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{p}{:}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{shot\PYZus{}made\PYZus{}flag}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}
+        \PY{n}{player\PYZus{}shot\PYZus{}df\PYZus{}unstack}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
 
             \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}7}]:}        percent\_after\_miss  percent\_after\_make
-        25.0             0.285714            0.000000
-        136.0            0.380435            0.412429
-        165.0            0.430435            0.386997
-        272.0            0.385593            0.386667
-        558.0            0.285714            0.500000
+{\color{outcolor}Out[{\color{outcolor}9}]:}                         shot\_made\_flag                          \textbackslash{}
+                                          mean              sum          
+        previous\_shot\_made\_flag              0         1      0      1   
+        espn\_player\_id                                                   
+        25.0                          0.285714  0.000000    6.0    0.0   
+        136.0                         0.380435  0.412429  105.0   73.0   
+        165.0                         0.430435  0.386997  198.0  125.0   
+        272.0                         0.385593  0.386667   91.0   58.0   
+        558.0                         0.285714  0.500000    2.0    3.0   
+        
+                                percent\_after\_miss percent\_after\_make  
+                                                                       
+        previous\_shot\_made\_flag                                        
+        espn\_player\_id                                                 
+        25.0                              0.285714           0.000000  
+        136.0                             0.380435           0.412429  
+        165.0                             0.430435           0.386997  
+        272.0                             0.385593           0.386667  
+        558.0                             0.285714           0.500000  
 \end{Verbatim}
         
     We now have the shooting percentage for every player both after a miss
@@ -535,16 +544,16 @@ has a higher percentage after a make and blue points for a player that
 has a higher percentage after a miss.
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}8}]:} \PY{n}{colors} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{player\PYZus{}shot\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{percent\PYZus{}after\PYZus{}miss}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{\PYZgt{}}\PY{n}{player\PYZus{}shot\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{percent\PYZus{}after\PYZus{}make}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{b}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-        \PY{n}{player\PYZus{}shot\PYZus{}df}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{percent\PYZus{}after\PYZus{}miss}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{percent\PYZus{}after\PYZus{}make}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{kind}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scatter}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{n}{colors}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{12}\PY{p}{,}\PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}10}]:} \PY{n}{colors} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{player\PYZus{}shot\PYZus{}df\PYZus{}unstack}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{percent\PYZus{}after\PYZus{}miss}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{\PYZgt{}}\PY{n}{player\PYZus{}shot\PYZus{}df\PYZus{}unstack}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{percent\PYZus{}after\PYZus{}make}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{b}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{player\PYZus{}shot\PYZus{}df\PYZus{}unstack}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{percent\PYZus{}after\PYZus{}miss}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{percent\PYZus{}after\PYZus{}make}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{kind}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scatter}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{n}{colors}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{12}\PY{p}{,}\PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
 \end{Verbatim}
 
             \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}8}]:} <matplotlib.axes.\_subplots.AxesSubplot at 0x7fb4b805c8d0>
+{\color{outcolor}Out[{\color{outcolor}10}]:} <matplotlib.axes.\_subplots.AxesSubplot at 0x7fa542edb490>
 \end{Verbatim}
         
     \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{hotHandEffect_files/hotHandEffect_23_1.png}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{hotHandEffect_files/hotHandEffect_27_1.png}
     \end{center}
     { \hspace*{\fill} \\}
     
@@ -568,22 +577,22 @@ possibly subtracting from 1 (depending on whether the t-statistic is
 positive or negative) to get our true p-value.
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}9}]:} \PY{k+kn}{import} \PY{n+nn}{scipy.stats}
-        
-        \PY{p}{(}\PY{n}{t}\PY{p}{,} \PY{n}{p}\PY{p}{)} \PY{o}{=} \PY{n}{scipy}\PY{o}{.}\PY{n}{stats}\PY{o}{.}\PY{n}{ttest\PYZus{}1samp}\PY{p}{(}\PY{n}{player\PYZus{}shot\PYZus{}df}\PY{o}{.}\PY{n}{percent\PYZus{}after\PYZus{}make}\PY{o}{\PYZhy{}}\PY{n}{player\PYZus{}shot\PYZus{}df}\PY{o}{.}\PY{n}{percent\PYZus{}after\PYZus{}miss}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{)}
-        \PY{k}{if} \PY{n}{t} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0}\PY{p}{:}
-            \PY{c+c1}{\PYZsh{} t\PYZgt{}0 implies percent\PYZus{}after\PYZus{}make is generally greater than percent\PYZus{}after\PYZus{}miss}
-            \PY{c+c1}{\PYZsh{} so this is the tail that (at least somewhat) supports our alternative hypothesis}
-            \PY{n}{p} \PY{o}{=} \PY{n}{p}\PY{o}{/}\PY{l+m+mi}{2}
-        \PY{k}{else}\PY{p}{:}
-            \PY{c+c1}{\PYZsh{} t\PYZlt{}0 implies percent\PYZus{}after\PYZus{}make is generally less than percent\PYZus{}after\PYZus{}miss}
-            \PY{c+c1}{\PYZsh{} so this is the tail that definitely does not support our alternative hypothesis}
-            \PY{n}{p} \PY{o}{=} \PY{l+m+mi}{1} \PY{o}{\PYZhy{}} \PY{n}{p}\PY{o}{/}\PY{l+m+mi}{2}
-        \PY{n}{p}
+{\color{incolor}In [{\color{incolor}11}]:} \PY{k+kn}{import} \PY{n+nn}{scipy.stats}
+         
+         \PY{p}{(}\PY{n}{t}\PY{p}{,} \PY{n}{p}\PY{p}{)} \PY{o}{=} \PY{n}{scipy}\PY{o}{.}\PY{n}{stats}\PY{o}{.}\PY{n}{ttest\PYZus{}1samp}\PY{p}{(}\PY{n}{player\PYZus{}shot\PYZus{}df\PYZus{}unstack}\PY{o}{.}\PY{n}{percent\PYZus{}after\PYZus{}make}\PY{o}{\PYZhy{}}\PY{n}{player\PYZus{}shot\PYZus{}df\PYZus{}unstack}\PY{o}{.}\PY{n}{percent\PYZus{}after\PYZus{}miss}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{n}{nan\PYZus{}policy}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{omit}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{k}{if} \PY{n}{t} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0}\PY{p}{:}
+             \PY{c+c1}{\PYZsh{} t\PYZgt{}0 implies percent\PYZus{}after\PYZus{}make is generally greater than percent\PYZus{}after\PYZus{}miss}
+             \PY{c+c1}{\PYZsh{} so this is the tail that (at least somewhat) supports our alternative hypothesis}
+             \PY{n}{p} \PY{o}{=} \PY{n}{p}\PY{o}{/}\PY{l+m+mi}{2}
+         \PY{k}{else}\PY{p}{:}
+             \PY{c+c1}{\PYZsh{} t\PYZlt{}0 implies percent\PYZus{}after\PYZus{}make is generally less than percent\PYZus{}after\PYZus{}miss}
+             \PY{c+c1}{\PYZsh{} so this is the tail that definitely does not support our alternative hypothesis}
+             \PY{n}{p} \PY{o}{=} \PY{l+m+mi}{1} \PY{o}{\PYZhy{}} \PY{n}{p}\PY{o}{/}\PY{l+m+mi}{2}
+         \PY{n}{p}
 \end{Verbatim}
 
             \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}9}]:} 0.99951561688842272
+{\color{outcolor}Out[{\color{outcolor}11}]:} 0.99951561688842283
 \end{Verbatim}
         
     So, our p-value is (much) larger than 0.05 which means the data do not
@@ -625,6 +634,188 @@ a make or a miss.
 We could investigate the grouping step of the data arranging. This step
 takes a fair amount of time. Perhaps there is a more efficient way to
 perform the same task.
+
+
+    \subsection{Splitting shots on a per game basis}
+
+
+    In principal we should be able to use almost the same procedure as when
+we split on player only. We just need to group by both the player and
+the game.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}12}]:} \PY{n}{shots\PYZus{}only\PYZus{}previous}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+            \begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}12}]:}                     name   game\_date  espn\_player\_id  period  \textbackslash{}
+         189    Metta World Peace  2016-10-30            25.0       1   
+         15320  Metta World Peace  2016-11-08            25.0       4   
+         28798  Metta World Peace  2016-11-08            25.0       4   
+         33601  Metta World Peace  2016-11-23            25.0       1   
+         23045  Metta World Peace  2016-11-23            25.0       1   
+         
+                minutes\_remaining  seconds\_remaining  shot\_made\_flag  \textbackslash{}
+         189                    1                  6               0   
+         15320                  6                 24               0   
+         28798                  5                 39               0   
+         33601                  7                 39               1   
+         23045                  4                 21               0   
+         
+                previous\_shot\_made\_flag  
+         189                          0  
+         15320                        0  
+         28798                        0  
+         33601                        0  
+         23045                        1  
+\end{Verbatim}
+        
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}13}]:} \PY{n}{player\PYZus{}shot\PYZus{}df} \PY{o}{=} \PY{n}{shots\PYZus{}only\PYZus{}previous}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{previous\PYZus{}shot\PYZus{}made\PYZus{}flag}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{game\PYZus{}date}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{espn\PYZus{}player\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{shot\PYZus{}made\PYZus{}flag}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{espn\PYZus{}player\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{game\PYZus{}date}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{previous\PYZus{}shot\PYZus{}made\PYZus{}flag}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{aggregate}\PY{p}{(}\PY{p}{[}\PY{n}{numpy}\PY{o}{.}\PY{n}{mean}\PY{p}{,}\PY{n}{numpy}\PY{o}{.}\PY{n}{sum}\PY{p}{]}\PY{p}{)}
+         \PY{n}{player\PYZus{}shot\PYZus{}df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+            \begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}13}]:}                                                   shot\_made\_flag    
+                                                                     mean sum
+         espn\_player\_id game\_date  previous\_shot\_made\_flag                   
+         25.0           2016-10-30 0                                  0.0   0
+                        2016-11-08 0                                  0.0   0
+                        2016-11-23 0                                  1.0   2
+                                   1                                  0.0   0
+                        2016-11-29 0                                  0.2   1
+\end{Verbatim}
+        
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}14}]:} \PY{n}{player\PYZus{}shot\PYZus{}df\PYZus{}unstack} \PY{o}{=} \PY{n}{player\PYZus{}shot\PYZus{}df}\PY{o}{.}\PY{n}{unstack}\PY{p}{(}\PY{p}{)}
+         \PY{n}{player\PYZus{}shot\PYZus{}df\PYZus{}unstack}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{percent\PYZus{}after\PYZus{}miss}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{player\PYZus{}shot\PYZus{}df\PYZus{}unstack}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{p}{:}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{shot\PYZus{}made\PYZus{}flag}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+         \PY{n}{player\PYZus{}shot\PYZus{}df\PYZus{}unstack}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{percent\PYZus{}after\PYZus{}make}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{player\PYZus{}shot\PYZus{}df\PYZus{}unstack}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{p}{:}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{shot\PYZus{}made\PYZus{}flag}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}
+         \PY{n}{player\PYZus{}shot\PYZus{}df\PYZus{}unstack}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+            \begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}14}]:}                           shot\_made\_flag                percent\_after\_miss  \textbackslash{}
+                                             mean       sum                           
+         previous\_shot\_made\_flag                0    1    0    1                      
+         espn\_player\_id game\_date                                                     
+         25.0           2016-10-30            0.0  NaN  0.0  NaN                0.0   
+                        2016-11-08            0.0  NaN  0.0  NaN                0.0   
+                        2016-11-23            1.0  0.0  2.0  0.0                1.0   
+                        2016-11-29            0.2  NaN  1.0  NaN                0.2   
+                        2016-12-02            NaN  0.0  NaN  0.0                NaN   
+         
+                                   percent\_after\_make  
+                                                       
+         previous\_shot\_made\_flag                       
+         espn\_player\_id game\_date                      
+         25.0           2016-10-30                NaN  
+                        2016-11-08                NaN  
+                        2016-11-23                0.0  
+                        2016-11-29                NaN  
+                        2016-12-02                0.0  
+\end{Verbatim}
+        
+    That worked, but it took a long time to evaluate. This is certainly a
+candidate to find a more efficient method.
+
+    There is also some concern that we are throwing away too much of our
+data. Consider the player with espn\_player\_id of 25. The splitting by
+game results in 3 games where the player had a miss and a make before
+their last shot. However, we can look at all that player's shots.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}15}]:} \PY{n}{shots}\PY{p}{[}\PY{n}{shots}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{espn\PYZus{}player\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{==}\PY{l+m+mi}{25}\PY{p}{]}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{game\PYZus{}date}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{size}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+            \begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}15}]:} game\_date
+         2016-10-30    2
+         2016-11-08    2
+         2016-11-23    4
+         2016-11-29    5
+         2016-12-02    1
+         2016-12-05    5
+         2016-12-07    1
+         2016-12-22    1
+         2017-01-06    1
+         2017-01-14    2
+         2017-02-06    3
+         2017-03-13    1
+         dtype: int64
+\end{Verbatim}
+        
+    We see the player had shots in 12 games, but we are only looking at 3 of
+those games. This is likely worth looking at later, but we will ignore
+this issue for now with the logic that players not taking many shots are
+not what we are really interested in anyway.
+
+    We can get a summary of the data.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}16}]:} \PY{n}{player\PYZus{}shot\PYZus{}df}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+            \begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}16}]:}       shot\_made\_flag              
+                         mean           sum
+         count   39552.000000  39552.000000
+         mean        0.444909      2.070060
+         std         0.297917      1.769325
+         min         0.000000      0.000000
+         25\%         0.250000      1.000000
+         50\%         0.500000      2.000000
+         75\%         0.625000      3.000000
+         max         1.000000     13.000000
+\end{Verbatim}
+        
+    Note that the average percentage after a miss (0.538879) is greater than
+the average percentage after a make (0.367874).
+
+We can also plot the data using a scatter plot as before. Again blue
+dots indicate higher percentage after a miss and red dots indicate
+higher percentage after a make.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}17}]:} \PY{n}{colors} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{player\PYZus{}shot\PYZus{}df\PYZus{}unstack}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{percent\PYZus{}after\PYZus{}miss}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{\PYZgt{}}\PY{n}{player\PYZus{}shot\PYZus{}df\PYZus{}unstack}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{percent\PYZus{}after\PYZus{}make}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{b}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{player\PYZus{}shot\PYZus{}df\PYZus{}unstack}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{percent\PYZus{}after\PYZus{}miss}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{percent\PYZus{}after\PYZus{}make}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{kind}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scatter}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{n}{colors}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{12}\PY{p}{,}\PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+            \begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}17}]:} <matplotlib.axes.\_subplots.AxesSubplot at 0x7fa538d93510>
+\end{Verbatim}
+        
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{hotHandEffect_files/hotHandEffect_43_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    We can also do the t-test again.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}18}]:} \PY{p}{(}\PY{n}{t}\PY{p}{,} \PY{n}{p}\PY{p}{)} \PY{o}{=} \PY{n}{scipy}\PY{o}{.}\PY{n}{stats}\PY{o}{.}\PY{n}{ttest\PYZus{}1samp}\PY{p}{(}\PY{n}{player\PYZus{}shot\PYZus{}df\PYZus{}unstack}\PY{o}{.}\PY{n}{percent\PYZus{}after\PYZus{}make}\PY{o}{\PYZhy{}}\PY{n}{player\PYZus{}shot\PYZus{}df\PYZus{}unstack}\PY{o}{.}\PY{n}{percent\PYZus{}after\PYZus{}miss}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{n}{nan\PYZus{}policy}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{omit}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{k}{if} \PY{n}{t} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0}\PY{p}{:}
+             \PY{c+c1}{\PYZsh{} t\PYZgt{}0 implies percent\PYZus{}after\PYZus{}make is generally greater than percent\PYZus{}after\PYZus{}miss}
+             \PY{c+c1}{\PYZsh{} so this is the tail that (at least somewhat) supports our alternative hypothesis}
+             \PY{n}{p} \PY{o}{=} \PY{n}{p}\PY{o}{/}\PY{l+m+mi}{2}
+         \PY{k}{else}\PY{p}{:}
+             \PY{c+c1}{\PYZsh{} t\PYZlt{}0 implies percent\PYZus{}after\PYZus{}make is generally less than percent\PYZus{}after\PYZus{}miss}
+             \PY{c+c1}{\PYZsh{} so this is the tail that definitely does not support our alternative hypothesis}
+             \PY{n}{p} \PY{o}{=} \PY{l+m+mi}{1} \PY{o}{\PYZhy{}} \PY{n}{p}\PY{o}{/}\PY{l+m+mi}{2}
+         \PY{n}{p}
+\end{Verbatim}
+
+            \begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}18}]:} 1.0
+\end{Verbatim}
+        
+    Our p-value is very close to 1. Again, we cannot conclude that players
+are more likely to make a shot after making the previous shot. In fact,
+it seems very likely players are more likely to miss a shot after making
+the previous shot.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}18}]:} 
+\end{Verbatim}
 
 
     % Add a bibliography block to the postdoc
